@@ -1,4 +1,5 @@
 forceBuild='false'
+localBuild='false'
 
 CleanUpProject() {
     echo "-----Starting Clean Up-----"
@@ -8,12 +9,13 @@ CleanUpProject() {
 }
 
 BuildProject() {
-    echo $forceBuild
     if [ -d target/ ] && [ $forceBuild == 'false' ] ;
     then
         echo "Build already exists. Please clean up with the -c flag and rebuild."
         echo "Or force a build with the -f flag"
         exit 1
+    else
+        CleanUpProject
     fi
 
     echo "-----Starting Build-----"
@@ -32,13 +34,22 @@ BuildProject() {
     cp -r backend target/
     echo "Moving Frontend."
     cp -r frontend target/
+
+    echo "Building Backend"
+    echo $localBuild
+    if [ $localBuild == 'true' ] ;
+    then
+        cd target/backend
+        go build -o CoinbaseBoardBackend.out
+    fi
 }
 
-while getopts 'cfh' flag; do
+while getopts 'cflh' flag; do
   case "${flag}" in
     c) CleanUpProject 
         exit 0;;
     f) forceBuild='true';;
+    l) localBuild='true';;
     h) 
       echo "CoinbaseBoard - attempt to build CoinbaseBoard"
       echo " "
