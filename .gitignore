@@ -10,7 +10,7 @@
 *.code-workspace
 *.DS_Store
 
-*/.vscode/
+.vscode
 
 # Build Directory
 target/
