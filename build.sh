@@ -39,8 +39,8 @@ BuildProject() {
     echo $localBuild
     if [ $localBuild == 'true' ] ;
     then
-        cd target/backend
-        go build -o CoinbaseBoardBackend.out
+        cd target/backend/data-server
+        go run *.go
     fi
 }
 

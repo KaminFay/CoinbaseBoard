@@ -8,6 +8,7 @@ import (
 	"os"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/joho/godotenv"
 )
 
 /* global */
@@ -20,8 +21,19 @@ func initLogger() {
 	log.SetOutput(os.Stdout)
 }
 
+func initializeEnvVars() {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatal("Error loading environmental variables.")
+	}
+
+	API_KEY = os.Getenv("API_KEY")
+	API_SECRET = os.Getenv("API_SECRET")
+}
+
 func main() {
 	initLogger()
+	initializeEnvVars()
 	initializeCryptoList()
 	fmt.Println("Testing")
 	http.HandleFunc("/list_cryptos", listCryptos)
