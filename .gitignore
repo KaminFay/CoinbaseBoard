@@ -9,6 +9,9 @@
 *.sublime-workspace
 *.code-workspace
 *.DS_Store
+
+*/.vscode/
+
 # Build Directory
 target/
 
