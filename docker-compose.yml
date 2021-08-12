@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  monbodb:
+    image: mongo
+    container_name: ${CONTAINER_NAME}
+    environment: 
+      - MONGO_INITDB_DATABASE=${DB_NAME}
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASS}
+    volumes:
+      - ./backend/database/:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - ${DB_PORT}:${DB_PORT}
