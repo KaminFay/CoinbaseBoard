@@ -43,3 +43,10 @@ type CB_Single_Crypto struct {
 type CB_Spot_Price struct {
 	Data CB_Balance `json:"Data"`
 }
+
+type Mongo_Document struct {
+	Wallet_Value   float64 `json:"wallet_value"`
+	Trading_Value  float64 `json:"trading_value"`
+	Wallet_Balance float64 `json:"wallet_balance"`
+	Date           float64 `json:"date"`
+}

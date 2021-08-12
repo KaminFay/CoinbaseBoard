@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -93,4 +94,31 @@ func sendCoinbaseRequest(method, uri string) []byte {
 	}
 
 	return body
+}
+
+func getWalletValue(coinCode string) {
+	walletContent, _ := getWalletContent(coinCode)
+	currentCoinValue, _ := getCurrentCoinValue(coinCode)
+
+	currentWalletValue := currentCoinValue * walletContent
+	fmt.Println("Wallet Content: " + fmt.Sprintf("%f", walletContent) + " Coin Value: " + fmt.Sprintf("%f", currentCoinValue) + " Wallet Value: " + fmt.Sprintf("%f", currentWalletValue))
+	valueForMongo := Mongo_Document{walletContent,
+		currentCoinValue,
+		currentWalletValue,
+		float64(time.Now().Unix())}
+	insertSingleDocIntoCollection(valueForMongo, coinCode)
+}
+
+func getCurrentCoinValue(coinCode string) (float64, error) {
+	spotValueData := sendCoinbaseRequest("GET", "/v2/prices/"+coinCode+"-USD/spot")
+	spotValue := CB_Spot_Price{}
+	json.Unmarshal(spotValueData, &spotValue)
+	return strconv.ParseFloat(spotValue.Data.Amount, 64)
+}
+
+func getWalletContent(coinCode string) (float64, error) {
+	walletValueData := sendCoinbaseRequest("GET", "/v2/accounts/"+coinCode)
+	singleCrypto := CB_Single_Crypto{}
+	json.Unmarshal(walletValueData, &singleCrypto)
+	return strconv.ParseFloat(singleCrypto.Data.Balance.Amount, 64)
 }
